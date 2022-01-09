@@ -26,6 +26,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     }
     else 
     {
+        ProcessGuess();
         // check guess against HiddenWord 
         if (Input == HiddenWord)
         {
@@ -35,9 +36,18 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
         }
         else
         {
-            if(Input.Len() != HiddenWord.Len())
+            --Lives;
+            PrintLine(TEXT("You have Lost a life!!"));
+            if(Lives > 0)
             {
-                PrintLine(TEXT("The HiddenWord is %i characters long. \nYou have lost!"), HiddenWord.Len()); //Magic Number
+                if(Input.Len() != HiddenWord.Len())
+                {
+                    PrintLine(TEXT("Sorry, try guessing again! \nYiu have %i lives remaining "), Lives); 
+                }
+            }else
+            {
+                PrintLine(TEXT("You have ran out of lives"));
+                EndGame();
             }
     }
     }
@@ -67,8 +77,8 @@ void UBullCowCartridge::SetupGame()
     bGameOver = true;
 
     PrintLine(TEXT("Guess the %i letter word"), HiddenWord.Len()); // Change from 6 to length of HiddenWord
-    
-    PrintLine(TEXT("Type in your Guess \nPress Enter to continue..."));     // Prompt for guess
+    PrintLine(TEXT("You have %i Lives"), Lives);
+    PrintLine(TEXT("Type in your Guess and \nPress Enter to continue..."));// Prompt for guess
 }
 
 void UBullCowCartridge::EndGame()
@@ -76,4 +86,9 @@ void UBullCowCartridge::EndGame()
     bGameOver = true;
 
     PrintLine(TEXT("Press Enter to Play Again..."));
+}
+
+void UBullCowCartridge::ProcessGame()
+{
+
 }
