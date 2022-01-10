@@ -104,12 +104,15 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
 {
     //Loop through player input 
 
-   for (int32 Index = 0, Comparision = Index + 1; Comparision < Word.Len(); Comparision++)
+   for (int32 Index = 0; Index < Word.Len(); Index++)
    {
-       // comparing the first character to the following ones
-       if (Word[Index] == Word[Comparision])
+       for (int32 Comparison = Index + 1; Comparison < Word.Len(); Comparison++)
        {
-           return false;
+            // comparing the first character to the following ones
+            if (Word[Index] == Word[Comparison])
+            {
+                return false;
+            }
        }
        
        /* code */
