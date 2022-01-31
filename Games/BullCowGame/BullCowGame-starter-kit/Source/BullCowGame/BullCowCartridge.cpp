@@ -7,26 +7,13 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
 
+    GetValidWords(Words);
     //Setting up game
     SetupGame();
-
-    TArray<FString> ValidWords;
-
-    for (int32 Index = 0; Index < 10; Index++)
-    {
-        if(Words[Index].Len() >= 4 && Words[Index].Len() <= 8)
-        {
-            ValidWords.Emplace(Words[Index]);
-        }        
-        /* code */
-
-    }
-    
-
     PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line
 }
 
-void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
+void UBullCowCartridge::OnInput(const FString& PlayerInput) // When the player hits enter
 {
 /* 
     if game is over then do ClearScreen() and SetupGame() the game
@@ -40,7 +27,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     }
     else 
     {
-        ProcessGuess(Input);
+        ProcessGuess(PlayerInput);
          }
 }
 
@@ -50,7 +37,7 @@ void UBullCowCartridge::SetupGame()
      // Welcome Messages
     PrintLine(TEXT("Hello, welcome to the bulls & cows game"));
     
-     HiddenWord = TEXT("Boxers"); // set HiddenWord
+     HiddenWord = GetValidWords(Words)[0]; // set HiddenWord
     // set and display number of lives
     Lives = HiddenWord.Len();
     bGameOver = true;
@@ -67,7 +54,7 @@ void UBullCowCartridge::EndGame()
     PrintLine(TEXT("\nPress Enter to Play Again..."));
 }
 
-void UBullCowCartridge::ProcessGuess(FString Guess)
+void UBullCowCartridge::ProcessGuess(const FString& Guess)
 {
     
     // check if right number of characters
@@ -114,7 +101,7 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
     //play Again
 }
 
-bool UBullCowCartridge::IsIsogram(FString Word) const
+bool UBullCowCartridge::IsIsogram(const FString& Word) const
 {
     //Loop through player input 
 
@@ -135,4 +122,18 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
    return true;
 }
 
-TArray<FString>GetValidWords(TArray<FString>)
+TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString>& WordList) const
+{
+    TArray<FString> ValidWords;
+
+    for(FString IsoWord: WordList){
+        if(IsoWord[Index].Len() >= 4 && IsoWord[Index].Len() <= 8)
+        {
+            if(IsIsogram(IsoWord[Index]))
+            {
+                ValidWords.Emplace(IsoWord[Index]);
+            }
+        }        
+    }
+    return ValidWords;
+}
